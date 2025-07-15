@@ -29,8 +29,11 @@ jobs:
 
     # Шаг 4: (ОЧЕНЬ ВАЖНО) Публикация артефакта
     # Именно этого шага у вас не было
-    - name: Upload artifact
-      uses: actions/upload-artifact@v4.6.2
+    # ... предыдущие шаги ...
+
+    # Шаг 4: Загружаем всю папку target как артефакт
+    - name: Upload all build artifacts
+      uses: actions/upload-artifact@v4
       with:
-        name: package
-        path: target/*.jar
+        name: my-build-output
+        path: target/
