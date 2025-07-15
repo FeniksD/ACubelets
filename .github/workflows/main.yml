@@ -1,6 +1,7 @@
 name: Java CI with Maven
 
 on:
+  # Запускаем workflow при push или pull request в ветку main
   push:
     branches: [ "main" ]
   pull_request:
@@ -8,13 +9,15 @@ on:
 
 jobs:
   build:
-
+    # Используем последнюю версию Ubuntu
     runs-on: ubuntu-latest
 
     steps:
+    # 1. Клонируем репозиторий
     - name: Checkout repository
       uses: actions/checkout@v4
 
+    # 2. Настраиваем Java (JDK 17). Можете поменять версию, если нужно.
     - name: Set up JDK 17
       uses: actions/setup-java@v4
       with:
@@ -22,12 +25,21 @@ jobs:
         distribution: 'temurin'
         cache: maven
 
+    # 3. Собираем проект с помощью Maven
     - name: Build with Maven
       run: mvn -B package --file pom.xml
 
+    # 4. (ШАГ ДЛЯ ОТЛАДКИ) Показываем содержимое папки target
+    # Этот шаг поможет увидеть, какой именно файл создала сборка.
+    - name: List files in target directory
+      run: ls -R target
+
+    # 5. Публикуем артефакт
     - name: Upload artifact
       uses: actions/upload-artifact@v4
       with:
+        # Имя артефакта, которое будет отображаться в GitHub
         name: package
+        # Путь к файлу. Убедитесь, что он совпадает с тем, что показал шаг 4.
         path: target/*.jar
         
